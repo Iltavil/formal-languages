@@ -1,0 +1,26 @@
+program = declarationList ";" statement ";"
+declarationList = declaration | declaration ";" declarationList
+declaration = individualDeclaration | arrayDeclaration 
+individualDeclaration = type ":" IDENTIFIER
+arrayDeclaration = type ":" IDENTIFIER "[" nr "]"
+type = "int" | "char"
+statement = compoundStatement | assignmentStatement | printStatement | incrementStatement | conditionalStatement
+conditionalStatement = ifStatement | whileStatement | forStatement
+compoundStatement = statement ";" statement 
+assignmentStatement = IDENTIFIER "=" expression
+incrementStatement = IDENTIFIER "++" | IDENTIFIER "--"
+expression = term | term operation expression
+operation = "+" | "-" | "*" | "/" | "%"
+term = IDENTIFIER | DIGIT | LETTER | "input" "(" ")"
+printStatement = "print" "(" expression ")"
+ifStatement = "if" "(" condition ")" "{" statement ";" "}" ["else" "{" statement ";" "}"]
+whileStatement = "while" "(" condition ")" "{" statement ";" "}"
+forStatement = "for" "(" statement ";" condition ";" statement ")" "{" statement ";" "}"
+condition = conditionUnit | conditionUnit "or" condition | conditionUnit "and" condition
+conditionUnit = expression relation expression
+relation = "<" | ">" | "==" | "<=" | ">=" | "!="
+
+
+
+
+

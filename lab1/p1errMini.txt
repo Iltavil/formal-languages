@@ -1,0 +1,16 @@
+int~n1;
+int:2n;
+n1=input();
+2n=input();
+while(n1 != 2n and n1 != 0 and 2n != 0){
+    if (n1 > 2n){
+        n1 = n1 % 2n;
+        }
+    else{
+        2n = 2n % n1;
+        }
+}
+if(n1 < 2n){
+    n1 = 2n;
+}
+print(n1);
