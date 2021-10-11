@@ -4,7 +4,7 @@ Alphabet:
 1. Lexic:
 a. Special symbols
 	- operators: + - * / % = < > <= >= == != ++ --
-	- separators: () [] {} : space newline ;
+	- separators: () [] {} : space ;
 	- reserved words: if else while for int char print input or and
 b. identifiers -  a sequence of letters followed by digits
 	identifier = letter | letter{letter}{digit}
