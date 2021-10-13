@@ -20,9 +20,10 @@ class SymbolTable:
             self.nodes.append(self.head)
         else:
             current = self.head
-            while True :
+            while True :#middle
                 if current.key == key:
                     break
+                #left side
                 elif current.key > key:
                     if current.left is None:
                         current.left = Node(key,position)
@@ -31,7 +32,7 @@ class SymbolTable:
                         break
                     else:
                         current = current.left
-                else:
+                else: #right side
                     if current.right is None:
                         current.right = Node(key,position)
                         self.position = self.position + 1

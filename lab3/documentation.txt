@@ -3,3 +3,6 @@ https://github.com/PamfilCatalin/formal-languages
 symbol table with an alphabetically  binary search tree implementation
 position is an index, so we can search by key or position
 to make it easier to search by position we keep an array of the elements too
+
+insert checks if the first node exists, then it goes down the branches trying to see if the 
+    key already exists or if it needs to be inserted
