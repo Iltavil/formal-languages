@@ -1,0 +1,8 @@
+https://github.com/PamfilCatalin/formal-languages
+
+we start by splitting the reserved tokens in alphanumerical and not alphanumerical
+
+we then make sure to split all the possible tokens with space so they are easy to tokenize
+
+then we check to see if they are reserved. If they are not then we match them with regex. If they match we add them to the 
+    symbol table, otherwise we raise error
