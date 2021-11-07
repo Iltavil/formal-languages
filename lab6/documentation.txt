@@ -1,0 +1,6 @@
+FAreader can be used as a menu for reading or as a checker.
+it is needed to give it the name of the file so it can work
+
+menu() is used for the menu part
+checkWrapper(string) is used to check a string if it respects the rules
+  
