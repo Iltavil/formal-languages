@@ -39,7 +39,7 @@ def readFile(inputFileString):
     lineNr = 0
     symbolTable = SymbolTable()
     errorFound = False
-    constantRE = "^[-+]?[1-9][0-9]+$|0"
+    constantRE = "^[-+]?[1-9][0-9]*$|0"
     indentifierRE = "^[a-zA-z]\w*$"
     pifFile = "PIF.out"
     removeFile(pifFile)
@@ -54,24 +54,29 @@ def readFile(inputFileString):
             while i < len(line):
                 #if the character is a symbol and it is in token.in
                 if sum(s.count(line[i]) for s in nonAlnumTokens):
+
                     #checks for - in negative numbers
                     if line[i] == "-" and line[i+1].isnumeric() and canBeNegative:
                         formatedLine = formatedLine +line[i]
                         i+=1
                         continue
+                    
                     formatedLine = formatedLine + " " + line[i]
                     i +=1
+
                     #checks for a compound symbol
                     if i <  len(line) and line[i-1] + line[i] in nonAlnumTokens:
                         formatedLine += line[i]
                         i +=1
                     formatedLine += " "
                     canBeNegative = True
+
                 #checks for other symbols
                 elif line[i] not in (" ","\n","'") and not line[i].isalnum():
                     formatedLine = formatedLine + " " + line[i] + " "
                     i +=1
                     canBeNegative = False
+
                 #meant for numbers and characters
                 else:
                     formatedLine += line[i]
@@ -85,7 +90,7 @@ def readFile(inputFileString):
             #we start adding the tokens to pif and check if they are lexically ok
             for eachToken in tokens:
                 if eachToken in alnumTokens or eachToken in nonAlnumTokens:
-                    genPIF(eachToken,0,pifFile)
+                    genPIF(eachToken,-1,pifFile)
                 elif re.match(constantRE,eachToken):
                     index = symbolTable.insert(eachToken)
                     genPIF("const",index,pifFile)
