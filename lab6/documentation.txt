@@ -4,3 +4,19 @@ it is needed to give it the name of the file so it can work
 menu() is used for the menu part
 checkWrapper(string) is used to check a string if it respects the rules
   
+LowerCaseLetters = "a" | "b" | ... | "z"
+UpperCaseLetters = "A" | "B" | ... | "Z"
+Digits = "0" | "1" | ... | "9"
+SpecialCharacters = "-"
+Characters = LowerCaseLetters | UpperCaseLetters | Digits | SpecialCharacters
+Input = StatesPart "\n" InitialPart "\n" AlphabetPart "\n" TransitionsPart "\n" FinalPart
+StatesPart = "-STATES\n" StateList
+StateList = State | State "," StateList
+State = UpperCaseLetters | UpperCaseLetters State
+InitialPart = "-INITIAL\n" State
+AlphabetPart = "-ALPHABET\n" AlphabetList
+AlphabetList = Characters | Characters "," AlphabetList
+TransitionsPart = "-TRANSITIONS\n" TransitionList 
+TransitionList = Transition | Transition "\n" TransitionList
+Transition = State "~" AlphabetList "~" State
+FinalPart = "-FINAL\n" StateList
