@@ -71,7 +71,9 @@ class FAreader:
         for transaction in self.transitions:
             if state == transaction[0] and currentLetter in transaction[1]:
                 if not givenSequence:
-                    return True
+                    if state in self.finalStates:
+                        return True
+                    return False
                 returnValue = returnValue or self.__check(transaction[2],givenSequence[0],givenSequence[1:])
         return returnValue
 
@@ -96,7 +98,8 @@ class FAreader:
 
 #a = FAreader("FA.in")
 #a.readFile()
-#print(a.checkWrapper("ab2cd222aA"))
+#a.menu()
+#print(a.checkWrapper("2ab2cd222aA"))
 #n = FAreader("numberFA.in")
 #n.readFile()
 #print(n.checkWrapper("2"))
