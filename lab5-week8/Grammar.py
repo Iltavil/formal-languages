@@ -49,11 +49,11 @@ class Grammar:
                 return False
         return True
 
-a = Grammar()
-a.readFile("g1.txt")
+#a = Grammar()
+#a.readFile("g1.txt")
 #print(a.nonterminals)
 #print(a.terminals)
-print(a.productions)
+#print(a.productions)
 #print(a.CFGcheck())
 
 
