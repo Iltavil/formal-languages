@@ -1,15 +1,21 @@
-from copy import deepcopy
+from copy import copy, deepcopy
+from typing import final
 
 from Grammar import Grammar
 
 
 class Parser:
-    def __init__(self) -> None:
+    def __init__(self,fileName) -> None:
         self.grammar = Grammar()
+        self.grammar.readFile(fileName)
         #[[[],[]],[[]]]
         self.allSets = []
         #[[],[],[]]
         self.forCheckingAllSets = []
+        self.table = []
+        self.allCharacters = copy(self.grammar.nonterminals)
+        self.allCharacters += copy(self.grammar.terminals)
+        
     
     #[["S'",["~","S"]],[...]]
     #["~","S"].index("~")
@@ -113,11 +119,107 @@ class Parser:
             print("set" + str(i) + ": " +str(set))
             i+=1
 
+    
+
+    def checkAccept(self, setIndex):
+        #return true or false
+        finalSet = [self.grammar.startingSymbol+"`",[self.grammar.startingSymbol,"~"]]
+        for individualSet in self.allSets[setIndex]:
+            if individualSet == finalSet:
+                return True
+        return False
+
+    def getShift(self,setIndex,char):
+        #returns the set index for shiftself.table
+        returnedValue = -2
+        #TODO maybe change to setIndex + 1
+        for i in range(len(self.allSets)):
+            for individualSet in self.allSets[i]:
+                individualSetArray = individualSet[1]
+                if char in individualSetArray:
+                    if individualSetArray.index(char) + 1 == individualSetArray.index("~"):
+                        returnedValue = i
+                        return returnedValue
+        return returnedValue
+    
+
+    
+    def createTable(self):
+        #only use this for reduce, so we add ~ to the end to compare in an easier way
+        errorSets = {}
+        numberedProductions = []
+
+
+
+        for key in self.grammar.productions.keys():
+            for production in self.grammar.getProductionsForNonterminal(key):
+                productionCopy = copy(production)
+                productionCopy.append("~")
+                numberedProductions.append([key,productionCopy])
+        
+        for currentSetIndex in range(len(self.allSets)):
+            self.table.append([None,None])
+            if self.checkAccept(currentSetIndex):
+               self.table[currentSetIndex][0] = "accept"
+            else:
+                #check reduce
+                for individualSet in self.allSets[currentSetIndex]:
+                    if individualSet in numberedProductions:
+                        if  self.table[currentSetIndex][0] == None:
+                            self.table[currentSetIndex][0] = "reduce "+ str(numberedProductions.index(individualSet))
+                        else :
+                            if currentSetIndex not in errorSets:
+                                errorSets[currentSetIndex] = self.table[currentSetIndex][0]
+                            else:
+                                errorSets[currentSetIndex] += "reduce "+ str(numberedProductions.index(individualSet))
+                #shift
+                setShiftPosition = [-1] * len(self.allCharacters)
+                for individualSet in self.allSets[currentSetIndex]:
+                    individualSetArray = individualSet[1]
+                    pointIndex = individualSetArray.index("~")
+                    if pointIndex +1 !=  len(individualSetArray):
+                        #we know we can shift
+                        if  self.table[currentSetIndex][0] == None:
+                            self.table[currentSetIndex][0] = "shift"
+                            self.table[currentSetIndex][1] = setShiftPosition
+                        if "reduce" in self.table[currentSetIndex][0]:
+                            if currentSetIndex not in errorSets:
+                                errorSets[currentSetIndex] = self.table[currentSetIndex][0]
+                            else:
+                                errorSets[currentSetIndex] += " shift"
+                            break
+                        
+                        characterShiftSet = self.getShift(currentSetIndex,individualSetArray[pointIndex+1])
+                        if characterShiftSet == -2:
+                            print("|BIG ERROR, -2-----------------")
+                        setShiftPosition[self.allCharacters.index(individualSetArray[pointIndex+1])] = characterShiftSet
+
+        #error
+        if errorSets:
+            print("we have errors with sets:" + str(errorSets.keys()))
+            for i in errorSets.keys():
+                print(errorSets[i])
+                print(self.allSets[i])
+
+        
+
+            
+
+
+    
+
 #print(["~","S"].index("~"))
-a = Parser()
-a.grammar.readFile("test.txt")
+a = Parser("g2.txt")
+
+# symbols = []
+# symbols += a.grammar.terminals
+# symbols += a.grammar.nonterminals
+# print(symbols)
+
 a.CanonicalCollection()
-a.prettyPrintSets()
+a.createTable()
+#print(a.table)
+#a.prettyPrintSets()
 #a.closure([["A",["~","A"]]])
 #print(a.allSets)
 #a.goto([["S",["~","S"]],["A",["C","~","A"]],["A",["C","~","S"]]],"S")

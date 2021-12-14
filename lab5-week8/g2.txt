@@ -1,13 +1,13 @@
 program compoundStatement statement declarationStatement assignmentStatement printStatement inputStatement incrementStatement conditionalStatement ifStatement whileStatement forStatement individualDeclaration arrayDeclaration type expressionHandler expression term operation factor condition conditionTerm conditionFactor relation boolConstant identifier character letter lowercaseLetter uppercaseLetter number unsignedNumber digit nonzerodigit
-+ - * / % = ++ -- < > <= >= == != ! ( ) [ ] { } : ; if else while for int char print input or and True False 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
++ - * / % = ++ -- < > <= >= == != ! ( ) [ ] { } : ; if else while for int bool char print input or and True False 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 program
-program ~ { compoundStatement  }
+program ~ { compoundStatement }
 
 compoundStatement ~ statement | statement compoundStatement
 statement ~ declarationStatement | assignmentStatement | printStatement | inputStatement | incrementStatement | conditionalStatement
 conditionalStatement ~ ifStatement | whileStatement | forStatement
 
-declarationStatement ~ individualDeclaration  ; | arrayDeclaration ;
+declarationStatement ~ individualDeclaration ; | arrayDeclaration ;
 individualDeclaration ~ type : identifier
 arrayDeclaration ~ type : identifier [ unsignedNumber ]
 type ~ int | char | bool
@@ -22,9 +22,9 @@ term ~ factor | factor operation term
 operation ~ + | - | * | / | %
 factor ~ identifier | number | character | ( expression )
 
-ifStatement ~ if ( condition ) program | if ( condition ) program  else program 
+ifStatement ~ if ( condition ) program | if ( condition ) program else program
 whileStatement ~ while ( condition ) program
-forStatement ~ for ( statement ; condition ; statement ) program 
+forStatement ~ for ( statement ; condition ; statement ) program
 
 condition ~ conditionTerm | ! condition | conditionTerm relation condition
 conditionTerm ~ conditionFactor | conditionFactor relation conditionTerm
