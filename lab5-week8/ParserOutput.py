@@ -5,10 +5,22 @@ from Parser import Parser
 
 
 class ParserOutput:
-    def __init__(self, fileName) -> None:
+    def __init__(self, fileName, pifFileName) -> None:
         self.parser = Parser(fileName)
         self.parser.CanonicalCollection()
         self.parser.createTable()
+        #this will be a file with rows of form: symbol value
+        self.pifFile = pifFileName 
+
+
+    def parsePif(self):
+        fullArray = []
+        with open(self.pifFile) as file:
+            allLines = file.readlines()
+            for line in allLines:
+                fullArray.append(line.split()[0])
+
+        return self.parse(fullArray)
 
     def shift(self, builtPath,inputStringArray,output):
         firstChar = inputStringArray.pop(0)
@@ -73,5 +85,7 @@ class ParserOutput:
             
         return (returnedMessage,output)
 
-a = ParserOutput("works.txt")
-print(a.parse(["a","b","c","d","a"]))
+a = ParserOutput("works.txt","seq.txt")
+print(a.parsePif())
+
+#print(a.parse(["a","b","c","d","a"]))
