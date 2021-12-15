@@ -49,15 +49,15 @@ class Grammar:
                 return False
         return True
 
-a = Grammar()
-a.readFile("g2.txt")
+# a = Grammar()
+# a.readFile("g2.txt")
 #print(a.nonterminals)
 #print(a.terminals)
 #print(a.productions)
-for i in a.productions:
-    for ii in a.productions[i]:
-        if '' in ii:
-            print(ii)
+# for i in a.productions:
+#     for ii in a.productions[i]:
+#         if '' in ii:
+            # print(ii)
 #print(a.CFGcheck())
 
 

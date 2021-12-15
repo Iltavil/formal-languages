@@ -15,6 +15,7 @@ class Parser:
         self.table = []
         self.allCharacters = copy(self.grammar.nonterminals)
         self.allCharacters += copy(self.grammar.terminals)
+        self.numberedProductions = []
         
     
     #[["S'",["~","S"]],[...]]
@@ -129,15 +130,16 @@ class Parser:
                 return True
         return False
 
-    def getShift(self,setIndex,char):
+    def getShift(self,setIndex,char,previousPointIndex):
         #returns the set index for shiftself.table
         returnedValue = -2
         #TODO maybe change to setIndex + 1
-        for i in range(len(self.allSets)):
+        for i in range(setIndex+1,len(self.allSets)):
             for individualSet in self.allSets[i]:
                 individualSetArray = individualSet[1]
                 if char in individualSetArray:
-                    if individualSetArray.index(char) + 1 == individualSetArray.index("~"):
+                    # if individualSetArray.index(char) + 1 == individualSetArray.index("~"):
+                    if individualSetArray[previousPointIndex] == char:
                         returnedValue = i
                         return returnedValue
         return returnedValue
@@ -147,7 +149,8 @@ class Parser:
     def createTable(self):
         #only use this for reduce, so we add ~ to the end to compare in an easier way
         errorSets = {}
-        numberedProductions = []
+        
+        
 
 
 
@@ -155,7 +158,7 @@ class Parser:
             for production in self.grammar.getProductionsForNonterminal(key):
                 productionCopy = copy(production)
                 productionCopy.append("~")
-                numberedProductions.append([key,productionCopy])
+                self.numberedProductions.append([key,productionCopy])
         
         for currentSetIndex in range(len(self.allSets)):
             self.table.append([None,None])
@@ -164,14 +167,16 @@ class Parser:
             else:
                 #check reduce
                 for individualSet in self.allSets[currentSetIndex]:
-                    if individualSet in numberedProductions:
+                    if individualSet in self.numberedProductions:
                         if  self.table[currentSetIndex][0] == None:
-                            self.table[currentSetIndex][0] = "reduce "+ str(numberedProductions.index(individualSet))
+                            productionNumber = self.numberedProductions.index(individualSet)
+                            self.table[currentSetIndex][0] = "reduce "+ str(productionNumber)
+                            self.table[currentSetIndex][1] = productionNumber
                         else :
                             if currentSetIndex not in errorSets:
                                 errorSets[currentSetIndex] = self.table[currentSetIndex][0]
-                            else:
-                                errorSets[currentSetIndex] += "reduce "+ str(numberedProductions.index(individualSet))
+                            errorSets[currentSetIndex] += str(self.numberedProductions.index(individualSet))
+                            break
                 #shift
                 setShiftPosition = [-1] * len(self.allCharacters)
                 for individualSet in self.allSets[currentSetIndex]:
@@ -185,11 +190,10 @@ class Parser:
                         if "reduce" in self.table[currentSetIndex][0]:
                             if currentSetIndex not in errorSets:
                                 errorSets[currentSetIndex] = self.table[currentSetIndex][0]
-                            else:
-                                errorSets[currentSetIndex] += " shift"
+                            errorSets[currentSetIndex] += " shift"
                             break
                         
-                        characterShiftSet = self.getShift(currentSetIndex,individualSetArray[pointIndex+1])
+                        characterShiftSet = self.getShift(currentSetIndex,individualSetArray[pointIndex+1],pointIndex)
                         if characterShiftSet == -2:
                             print("|BIG ERROR, -2-----------------")
                         setShiftPosition[self.allCharacters.index(individualSetArray[pointIndex+1])] = characterShiftSet
@@ -201,6 +205,10 @@ class Parser:
                 print(errorSets[i])
                 print(self.allSets[i])
 
+    def printTable(self):
+        for i in range(len(self.allSets)):
+            print(str(self.allSets[i]) + ": "+ str(self.table[i]))
+
         
 
             
@@ -209,15 +217,16 @@ class Parser:
     
 
 #print(["~","S"].index("~"))
-a = Parser("g2.txt")
+# a = Parser("works.txt")
 
 # symbols = []
 # symbols += a.grammar.terminals
 # symbols += a.grammar.nonterminals
 # print(symbols)
 
-a.CanonicalCollection()
-a.createTable()
+# a.CanonicalCollection()
+# a.createTable()
+# a.printTable()
 #print(a.table)
 #a.prettyPrintSets()
 #a.closure([["A",["~","A"]]])
